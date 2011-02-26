@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="simple-hornetq" default="all">
+
+  <path id="classpath">
+    <fileset dir="lib"/>
+    <fileset dir="deps/build"/>
+  </path>
+
+
+  <target name="init">
+    <!-- create needed directories -->
+    <mkdir dir="deps/build"/>
+    <mkdir dir="build"/>
+    <mkdir dir="target"/>
+
+    <!-- define the ivy tasks -->
+    <taskdef name="ivy-configure" classname="org.apache.ivy.ant.IvyConfigure" classpathref="classpath"/>
+    <taskdef name="ivy-resolve" classname="org.apache.ivy.ant.IvyResolve" classpathref="classpath"/>
+    <taskdef name="ivy-retrieve" classname="org.apache.ivy.ant.IvyRetrieve" classpathref="classpath"/>
+    <taskdef name="ivy-publish" classname="org.apache.ivy.ant.IvyPublish" classpathref="classpath"/> 
+
+    <!-- retrieve dependencies with ivy -->
+    <ivy-retrieve pattern="deps/[conf]/[artifact]-[revision].[ext]" type="jar"/>
+
+    <!-- print out the classpath -->
+    <property name="classpath-str" refid="classpath"/>
+    <echo message="Classpath = ${classpath-str}"/>
+
+    <!-- define the scala related task -->
+    <taskdef resource="scala/tools/ant/antlib.xml" classpathref="classpath"/>
+  </target>
+
+
+
+  <target name="compile" depends="init">
+    <scalac
+      srcdir="src/scala"
+      destdir="build"
+      force="changed">
+      <include name="**/*.scala"/>
+      <classpath> 
+        <pathelement path="build"/>
+        <path refid="classpath"/>
+      </classpath>
+    </scalac>
+  </target>
+
+
+  <target name="deploy" depends="compile">
+    <mkdir dir="target/lib"/>
+
+    <copy todir="target/lib">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="deps/runtime">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+
+    <copy todir="target">
+      <fileset dir="src/scripts"/>
+    </copy>
+
+    <copy todir="target/lib">
+      <fileset dir="src/properties"/>
+    </copy>
+
+    <!-- jar up our service runtime -->
+    <jar destfile="target/lib/${ant.project.name}.jar">
+      <fileset dir="build">
+        <include name="**/*.class"/>
+      </fileset>
+    </jar>
+
+    <!-- set permissions -->
+    <chmod file="target" perm="a+x">
+      <fileset dir="target">
+        <include name="*.sh"/>
+      </fileset>
+    </chmod>
+  </target>
+
+
+  <target name="run" depends="deploy">
+    <exec dir="target" executable="bash">
+       <arg line="./run.sh"/>
+    </exec>
+  </target>
+
+
+  <target name="all" depends="deploy">
+  </target>
+
+
+  <target name="clean">
+    <delete dir="build"/>
+    <delete dir="target"/>
+    <delete dir="deps"/>
+  </target>
+
+
+  <target name="clean-and-all" description="cleans and then builds all" >
+     <antcall target="clean"> </antcall>
+     <antcall target="all"> </antcall>
+  </target>
+
+</project>

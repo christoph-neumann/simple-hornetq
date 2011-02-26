@@ -1,0 +1,19 @@
+<ivy-module version="2.0">
+  <info organisation="com.neumannhaus" module="${ant.project.name}"/>
+  <configurations defaultconfmapping="*->default">
+    <conf name="runtime" description="dependencies needed at runtime"/>
+    <conf name="build" extends="runtime" description="dependencies needed to build"/>
+  </configurations>
+  <dependencies>
+    <dependency conf="runtime" org="log4j" name="log4j" rev="1.2.13"/>
+    <dependency conf="runtime" org="org.hornetq" name="hornetq-core-client" rev="2.1.2.Final"/>
+    <dependency conf="runtime" org="org.jboss.netty" name="netty" rev="3.2.4.Final"/>
+    <!--
+    Needed for JMS, but we aren't doing JMS
+    <dependency conf="runtime" org="org.hornetq" name="hornetq-jms-client" rev="2.1.2.Final"/>
+    <dependency conf="runtime" org="org.jboss.javaee" name="jboss-jms-api" rev="1.1.0.GA"/>
+    -->
+    <dependency conf="runtime" org="org.scala-lang" name="scala-library" rev="2.8.1"/>
+    <dependency conf="build" org="org.scala-lang" name="scala-compiler" rev="2.8.1"/>
+  </dependencies>
+</ivy-module>

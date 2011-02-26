@@ -1,0 +1,12 @@
+<ivysettings>
+  <settings defaultResolver="main" />
+  <resolvers>
+    <chain name="main">
+      <url name="repository.jboss.org" m2compatible="true">
+        <ivy pattern="http://repository.jboss.org/nexus/content/groups/public-jboss/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+        <artifact pattern="http://repository.jboss.org/nexus/content/groups/public-jboss/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+      </url>
+      <ibiblio name="public" m2compatible="true" />
+    </chain>
+  </resolvers>
+</ivysettings>
