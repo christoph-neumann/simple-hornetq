@@ -36,6 +36,7 @@
     <scalac
       srcdir="src/scala"
       destdir="build"
+      deprecation="on"
       force="changed">
       <include name="**/*.scala"/>
       <classpath> 
