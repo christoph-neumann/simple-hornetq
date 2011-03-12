@@ -4,6 +4,7 @@
 class="app.SingleMessage"
 if [ "$1" != "" ]; then
 	class="app.$1"
+	shift 1
 fi
 
 app_home=`pwd`
